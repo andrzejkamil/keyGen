@@ -54,36 +54,16 @@ def api(browser, config, keys, domain):
     add_api_key.click()
     i = 0
     print('Ograniczanie klucza...')
-    sleep(10)
-    # while True:
-    #     try:
-    #         print("tu dziala")
-    #         try:
-    #             while browser.find_elements_by_tag_name('button')[i].text != 'Close' and \
-    #                     browser.find_elements_by_tag_name('button')[i].text != 'Zamknij':
-    #                 try:
-    #                     print("tu dziala tez")
-    #                     restrict_key = browser.find_by_css_selector('a.cfc-ng2-region')[i]
-    #                     i = i + 1
-    #                     print(restrict_key.text)
-    #                 except:
-    #                     sleep(1)
-    #         except:
-    #             restrict_key.click()
-    #             print('Kliknalem')
-    #         break
-    #     except:
-    #         sleep(1)
+    sleep(5)
+
     key_value = browser.find_element_by_id('_0rif_mat-input-0').get_attribute('value')
     print(key_value)
 
     keys.writelines('api:\t\t' + key_value + '\n')
-    sleep(2)
+    sleep(1)
     edit_key=browser.find_element_by_link_text("Edit API key")
     edit_key.click()
 
-    # edit_api = browser.find_element_by_link_text("Edit API key")
-    # edit_api.click()
 
     print('Dodawanie domeny...')
     while True:
@@ -95,68 +75,37 @@ def api(browser, config, keys, domain):
         except:
             sleep(1)
     browser.find_element_by_id('_0rif_mat-radio-3').click()
-
+    sleep(1)
     print('Dodawanie elementów...')
-    # while True:
-    #      try:
-    #          btns = browser.find_elements_by_class_name('cfc-form-list-new-item-text')
-    #          i = 0
-    #          while btns[i].text != 'DODAJ ELEMENT' and btns[i].text != 'ADD AN ITEM':
-    #              i = i + 1
-    #              add_el = btns[i]
-    #          add_el.click()
-    #          break
-    #      except:
-    #       sleep(1)
-    btns = browser.find_elements_by_class_name('cfc-form-list-new-item-text')
-    btns[0].click()
+    sleep(2)
+    add_btn = browser.find_element(By.XPATH, "//button[@aria-label='Add']")
+    add_btn.click()
+    print("klika")
+    sleep(1)
     new_el = browser.find_element_by_name('referrerInput')
     new_el.send_keys('http://' + domain + '/*')
-    doneBtns = browser.find_elements_by_class_name('mat-button-wrapper')
+    sleep(1)
+    doneBtns = browser.find_elements_by_xpath("//*[@class='mdc-button mat-mdc-button mat-unthemed mat-mdc-button-base cm-button']")
+    print(doneBtns)
     for btn in doneBtns:
         if btn.text == 'Done' or btn.text == 'DONE' or btn.text == 'GOTOWE':
             btn.click()
-    # while True:
-    #     try:
-    #          btns = browser.find_elements_by_class_name('mat-button-wrapper')
-    #          i = 0
-    #          while btns[i].text != 'GOTOWE' and btns[i].text != 'DONE':
-    #            i = i + 1
-    #             done = btns[i]
-    #             done.click()
-    #          break
-    #     except:
-    #          sleep(1)
-    #     donebtn = browser.find_elements_by_class_name("mdc-button__label")
+            sleep(1)
 
-    #donebtn[5].click()
-    # btns = browser.find_elements_by_class_name('cfc-form-list-new-item-text')
-    #
-    # btns[0].click()
-    btns = browser.find_elements_by_class_name('cfc-form-list-new-item-text')
-    btns[0].click()
+    #add_btn=browser.find_element(By.XPATH("/html/body/pan-shell/pcc-shell/cfc-panel-container/div/div/cfc-panel[1]/div/div/div[3]/cfc-panel-container/div/div/cfc-panel/div/div/cfc-panel-container/div/div/cfc-panel[1]/div/div/cfc-panel-container/div/div/cfc-panel[2]/div/div/central-page-area/div/div/pcc-content-viewport/div/div/pangolin-home/cfc-router-outlet/div/ng-component/cfc-single-panel-layout/cfc-panel-container/div/div/cfc-panel/div/div/services-api-key-details-page/apikey-details/cfc-panel-body/cfc-virtual-viewport/div[1]/div/cfc-column-layout/div/cfc-main-column/cfc-panel-body/cfc-virtual-viewport/div[1]/div/form/div[2]/services-key-browser-restrictions/div/services-app-restrictions-table/cfc-table/div[1]/span/cfc-table-action-container/button"))
+    add_btn = browser.find_element(By.XPATH, "//button[@aria-label='Add']")
+    add_btn.click()
+    sleep(1)
     new_el = browser.find_elements_by_name('referrerInput')
-    new_el = new_el[1]
+    new_el = new_el[0]
     new_el.send_keys('*.' + domain + '/*')
     sleep(1)
-
-    doneBtns2 = browser.find_elements_by_class_name('mat-button-wrapper')
-    for btn in doneBtns2:
+    doneBtns = browser.find_elements_by_xpath("//*[@class='mdc-button mat-mdc-button mat-unthemed mat-mdc-button-base cm-button']")
+    for btn in doneBtns:
         if btn.text == 'Done' or btn.text == 'DONE' or btn.text == 'GOTOWE':
             btn.click()
-
-    # btns = browser.find_elements_by_class_name('mat-button-wrapper')
-    # i = 0
-    # while btns[i].text != 'GOTOWE' and btns[i].text != 'DONE':
-    #     i = i + 1
-    #     done = btns[i]
-    # done.click()
-
-    #key_value = browser.find_element_by_id('_0rif_mat-input-1').get_attribute('value')
-    #print(key_value)
-
-    #keys.writelines('api:\t\t' + key_value + '\n')
-
+            sleep(1)
+    #doneBtn.click()
     saveButtons = browser.find_elements_by_class_name("mdc-button__label")
 
     print('Zapisywanie...')
