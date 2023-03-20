@@ -1,4 +1,4 @@
-import os
+import re
 from time import *
 from selenium.webdriver.common.by import By
 
@@ -6,59 +6,57 @@ def ua(browser, config, keys, domain):
     print('Otwieranie Google Analytics...')
     browser.get(config.get('urls', 'ua'))
     print('Generowanie klucza UA...')
-    while True:
-        try:
-            accounts_message = browser.find_element_by_css_selector('p.quota-status.ng-star-inserted')
-            if accounts_message.text != '':
-                accounts_message = accounts_message.text.split(' The maximum is ')[0]
-                print(accounts_message)
-                accounts_amount = accounts_message.replace('You have access to ', '')
-                if ' accounts.' in accounts_amount:
-                    accounts_amount = accounts_amount.replace(' accounts.', '')
-                else:
-                    accounts_amount = accounts_amount.replace(' account.', '')
-                accounts_amount = int(accounts_amount)
-                if accounts_amount <= int(config.get('uaAccounts', 'limit')):
-                    print('\t---UWAGA POZOSTAŁO JUŻ TYLKO ' + str(accounts_amount) + ' WOLNYCH MIEJSC NA KODY UA---')
-                    keys.writelines('\t---UWAGA POZOSTAŁO JUŻ TYLKO ' + str(accounts_amount) +
-                                    ' WOLNYCH MIEJSC NA KODY UA---\n')
-                break
-        except:
-            sleep(1)
-    while True:
-        try:
-            browser.find_element_by_css_selector('button.suite.suite-gaia-switcher.md-icon-button.md-button.'
-                                                 'md-standard-theme.md-ink-ripple').click()
-            google_account = browser.find_element_by_css_selector('span.suite-gaia-header-secondary-text').text
-            print('Zakładanie konta na ' + google_account + '...')
-            if config.get('client', 'uaGoogleAccount') == '1':
-                keys.writelines(google_account + '\n')
-            break
-        except:
-            sleep(1)
-    browser.refresh()
-    while True:
-        try:
-            browser.find_element_by_name('name').send_keys(domain)
-            break
-        except:
-            sleep(1)
+    sleep(5)
 
-    while True:
-        try:
-            next_btn = ''
-            btns = browser.find_elements_by_tag_name('button')
-            i = 0
-            while btns[i].text != 'Następny' and btns[i].text != 'Next':
-                i = i + 1
-                next_btn = btns[i]
-            next_btn.click()
-            browser.find_element_by_id('name').send_keys(domain)
-            break
-        except:
-            sleep(1)
+    accounts_message = browser.find_element_by_css_selector('p.quota-status.ng-star-inserted')
+    print(accounts_message.text)
+    #if accounts_message.text != '':
+     #   accounts_message = accounts_message.text.split(' The maximum is ')[0]
+      #  print(accounts_message)
+       # accounts_amount = accounts_message.replace('You have access to ', '')
+        #if ' accounts.' in accounts_amount:
+         #   accounts_amount = accounts_amount.replace(' accounts.', '')
+        #else:
+         #   accounts_amount = accounts_amount.replace(' account.', '')
 
+        #accounts_amount = int(accounts_amount)
+        #if accounts_amount <= int(config.get('uaAccounts', 'limit')):
+         #      print('\t---UWAGA POZOSTAŁO JUŻ TYLKO ' + str(accounts_amount) + ' WOLNYCH MIEJSC NA KODY UA---')
+          #     keys.writelines('\t---UWAGA POZOSTAŁO JUŻ TYLKO ' + str(accounts_amount) +
+           #                         ' WOLNYCH MIEJSC NA KODY UA---\n')
+
+    #while True:
+    #try:
+    #   browser.find_element_by_css_selector('button.suite.suite-gaia-switcher.md-icon-button.md-button.'
+   #                                              'md-standard-theme.md-ink-ripple').click()
+    #   google_account = browser.find_element_by_css_selector('span.suite-gaia-header-secondary-text').text
+     #  print('Zakładanie konta na ' + google_account + '...')
+      # if config.get('client', 'uaGoogleAccount') == '1':
+       #   keys.writelines(google_account + '\n')
+
+    #except:
+     #     sleep(1)
+    #browser.refresh()
+
+    inputfield = browser.find_element(By.XPATH, "//input[starts-with(@id, 'create-firebase-account-')]")
+    print(inputfield)
+    inputfield.send_keys(domain)
+    sleep(1)
+
+    btn = browser.find_element(By.XPATH, "/html/body/ga-hybrid-app-root/ui-view-wrapper/div/app-root/div/div/ui-view-wrapper/div/admin-home/div/div[2]/section/admin-view/div/ga-create-account/mat-vertical-stepper/div[1]/div/div/div/button")
+    #i = 0
+    #while btns[i].text != 'Następny' and btns[i].text != 'Next':
+     #   i = i + 1
+      #  next_btn = btns[i]
+       # next_btn.click()
+        #browser.find_element_by_id('name').send_keys(domain)
+        #break
+    btn.click()
+    sleep(1)
     print('Konfiguracja usługi...')
+    name = browser.find_element(By.ID, "name")
+    name.send_keys(domain)
+    sleep(1)
     country = ''
     btns = browser.find_elements_by_tag_name('button')
     i = 0
@@ -112,7 +110,7 @@ def ua(browser, config, keys, domain):
     advanced.click()
 
     browser.find_element_by_class_name("mdc-switch__icons").click()
-    browser.find_element_by_id('mat-input-5').send_keys('www.' + domain)
+    browser.find_element(By.XPATH, "//input[starts-with(@id, 'mat-input-')]").send_keys(domain)
 
     # while True:
     #     try:
